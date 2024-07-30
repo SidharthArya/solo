@@ -11,6 +11,19 @@
     let
       pkgs = nixpkgs.legacyPackages.x86_64-linux;
       pkgsw = nixpkgs-wayland.pkgs;
+      commonBuildInputs = [
+        pkgs.ninja
+        pkgs.clang
+        pkgs.meson
+        pkgs.wayland-scanner
+        pkgs.wayland
+        pkgs.pixman
+        pkgs.libxkbcommon
+        pkgs.pkg-config
+        pkgs.wayland-protocols
+        # pkgs.wlroots
+        inputs.nixpkgs-wayland.packages.x86_64-linux.wlroots
+      ];
     in {
       nixpkgs.overlays = [ inputs.nixpkgs-wayland.overlay ];
       nix.settings = {
@@ -23,21 +36,20 @@
           [ "https://cache.nixos.org" "https://nixpkgs-wayland.cachix.org" ];
       };
 
-      devShells.x86_64-linux.default = pkgs.mkShell {
-        nativeBuildInputs = [
-          pkgs.zig
-          pkgs.ninja
-          pkgs.clang
-          pkgs.meson
-          pkgs.wayland-scanner
-          pkgs.wayland
-          pkgs.pixman
-          pkgs.libxkbcommon
-          pkgs.pkg-config
-          pkgs.wayland-protocols
-          # pkgs.wlroots
-          inputs.nixpkgs-wayland.packages.x86_64-linux.wlroots
-        ];
+      devShells.x86_64-linux.default =
+        pkgs.mkShell { nativeBuildInputs = commonBuildInputs; };
+      packages.x86_64-linux.default = pkgs.stdenv.mkDerivation {
+        name = "solo";
+        src = ./.;
+        buildInputs = commonBuildInputs;
+        buildPhase = ''
+          ninja
+        '';
+        installPhase = ''
+          mkdir -p $out/bin;
+          cp solo $out/bin;
+        '';
+
       };
     };
 }
