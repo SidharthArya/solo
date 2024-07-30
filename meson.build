@@ -24,3 +24,9 @@ executable(
   dependencies : deps,
   link_with: slib)
 
+executable(
+	'soloctl',
+	['src/soloctl/main.c'],include_directories : incdir,
+  dependencies : deps,
+  link_with: slib)
+

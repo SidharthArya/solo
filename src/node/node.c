@@ -37,7 +37,7 @@ struct solo_toplevel *desktop_toplevel_at(struct solo_server *server, double lx,
   if (node == NULL || node->type != WLR_SCENE_NODE_BUFFER) {
     return NULL;
   }
-  struct wlr_scene_buffer *scene_buffer = wlr_scene_buffer_from_node(node);
+  struct wlr_scene_buffer *scene_buffer = wlr_scene_rect_from_node(node);
   struct wlr_scene_surface *scene_surface =
       wlr_scene_surface_try_from_buffer(scene_buffer);
   if (!scene_surface) {
