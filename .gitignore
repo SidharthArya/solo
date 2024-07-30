@@ -1,2 +1,9 @@
 refs/
 .direnv/
+.zig-cache/
+.cache/clangd/index
+.envrc
+Makefile
+results
+build
+result
